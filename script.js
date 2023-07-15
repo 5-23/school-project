@@ -1,4 +1,4 @@
-// 클릭한 엘레먼트
+// 초기화 코드
 clickElement = null;
 
 mouseX = 0;
@@ -9,6 +9,7 @@ originY = 0;
 
 speedX = 0;
 speedY = 0;
+
 // 미끄러운 정도
 const SLIP = 20
 // 튕기는 정도
@@ -23,7 +24,10 @@ document.onmouseup = () => {
     if (speedY > 2) {
         speedY *= GRA*10;
     }
+    // 속력 변경
     clickElement.setAttribute("speed", `${speedX} ${speedY}`)
+    
+    // 클릭한 객체 초기화
     clickElement = null;
 }
 document.onmousemove = (e) => {mouseX = e.clientX, mouseY = e.clientY}
@@ -31,6 +35,7 @@ document.querySelectorAll("section").forEach(e => {
     e.onmousedown = (k) => {
         e.setAttribute("speed", `0 0`)
         clickElement = e;
+        // 초기 좌표
         originX = k.offsetX;
         originY = k.offsetY;
     }
@@ -45,6 +50,7 @@ loop = () => {
         x = Number(e.getAttribute("speed").split(" ")[0])
         y = Number(e.getAttribute("speed").split(" ")[1])
         gravity = Number(e.getAttribute("gravity"))
+        // 가속도
         vx = x/SLIP;
         vy = y/SLIP;
         gravity += GRA;
@@ -97,12 +103,14 @@ loop = () => {
         clickElement.style.top  = `${-originY + mouseY+50}px`
         clickElement.style.left = `${-originX + mouseX+50}px`
 
+        // 화면에서 못나가게 만듬
         if (Number(clickElement.style.left.replace("px", "")) < 50){clickElement.style.left = "50px"; }
         if (Number(clickElement.style.left.replace("px", "")) > window.innerWidth-50){ clickElement.style.left = `${window.innerWidth-50}px`; }
         if (Number(clickElement.style.top.replace("px", "")) < 50){ clickElement.style.top = "50px"; }
         if (Number(clickElement.style.top.replace("px", "")) > window.innerHeight-50){ clickElement.style.top = `${window.innerHeight-50}px`; }
     }
     oldClick = clickElement
+    // 반복시킴
     requestAnimationFrame(loop)
 }
 loop()
